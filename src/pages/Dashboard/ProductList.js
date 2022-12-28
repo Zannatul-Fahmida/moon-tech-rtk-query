@@ -1,17 +1,16 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
+import { toast } from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
-import deleteProduct from "../../redux/thunk/products/deleteProduct";
-// import deleteProduct from "../../redux/thunk/products/deleteProduct";
-import loadProductData from "../../redux/thunk/products/fetchProducts";
 
 const ProductList = () => {
-  const products = useSelector((state) => state.product.products);
+  const [products, setProducts] = useState({});
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(loadProductData());
-  });
-
+    fetch("https://moon-tech-server.vercel.app/products")
+      .then((res) => res.json())
+      .then((data) => setProducts(data.data));
+  }, []);
   return (
     <div class="flex flex-col justify-center items-center h-full w-full ">
       <div class="w-full max-w-7xl mx-auto rounded-lg  bg-white shadow-lg border border-gray-200">
@@ -70,7 +69,7 @@ const ProductList = () => {
                   </td>
                   <td class="p-2">
                     <div class="flex justify-center">
-                      <button onClick={() => dispatch(deleteProduct(_id))}>
+                      <button onClick={() => dispatch()}>
                         <svg
                           class="w-8 h-8 hover:text-blue-600 rounded-full hover:bg-gray-100 p-1"
                           fill="none"
@@ -95,7 +94,6 @@ const ProductList = () => {
         </div>
       </div>
     </div>
-    // </section>
   );
 };
 

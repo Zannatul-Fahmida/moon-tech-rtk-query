@@ -2,10 +2,7 @@ import React from "react";
 import { BiListPlus, BiTrash } from "react-icons/bi";
 import { useDispatch } from "react-redux";
 import { useLocation } from "react-router-dom";
-import {
-  addToCart,
-  removeFromCart,
-} from "../redux/actions/productActions";
+import { addToCart, removeFromCart } from "../features/cart/cartSlice";
 
 const ProductCard = ({ product }) => {
   const { pathname } = useLocation();
@@ -16,8 +13,7 @@ const ProductCard = ({ product }) => {
       className=" relative shadow-lg rounded-3xl border p-3 flex flex-col text-indigo-900"
       key={product._id}
     >
-      {
-        pathname.includes("cart") && (
+      {pathname.includes("cart") && (
         <div className="grid place-items-center bg-indigo-500 text-white h-8 w-8 rounded-full absolute top-2 right-2">
           <p>{product.quantity}</p>
         </div>
@@ -40,10 +36,7 @@ const ProductCard = ({ product }) => {
       </div>
       <div className="flex gap-2 mt-5">
         {!pathname.includes("cart") && (
-          <button
-            onClick={() => dispatch(addToCart(product))}
-            className="bg-indigo-500 rounded-full py-1 px-2 flex-1 text-white text-bold"
-          >
+          <button onClick={()=>dispatch(addToCart(product))} className="bg-indigo-500 rounded-full py-1 px-2 flex-1 text-white text-bold">
             Add to cart
           </button>
         )}
@@ -57,9 +50,9 @@ const ProductCard = ({ product }) => {
         )}
         {pathname.includes("cart") && (
           <button
+          onClick={()=>dispatch(removeFromCart(product))}
             title="Remove from cart"
             className="bg-red-500 rounded-full py-1 px-2 flex-1 text-white flex justify-between items-center"
-            onClick={() => dispatch(removeFromCart(product))}
           >
             <p className="text-lg">Remove</p>
             <BiTrash size={20} className="text-white" />
