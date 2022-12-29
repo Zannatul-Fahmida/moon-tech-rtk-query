@@ -1,18 +1,22 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import ProductCard from "../../components/ProductCard";
+import { useGetProductsQuery } from "../../features/api/apiSlice";
 import { toggle, toggleBrands } from "../../features/filter/filterSlice";
 
 const Home = () => {
   const dispatch = useDispatch();
-  const [products, setProducts] = useState([]);
   const filter = useSelector((state) => state.filter);
   const { brands, stock } = filter;
-  useEffect(() => {
-    fetch("https://moon-tech-server.vercel.app/products")
-      .then((res) => res.json())
-      .then((data) => setProducts(data.data));
-  }, []);
+  const { data, isLoading, isSuccess, isError, error } = useGetProductsQuery();
+  const products = data?.data;
+  if (isLoading) {
+    return <p>Loading...</p>;
+  }
+
+  if (isError) {
+    return <p>Something went wrong</p>;
+  }
 
   const activeClass = "text-white bg-indigo-500 border-white";
 

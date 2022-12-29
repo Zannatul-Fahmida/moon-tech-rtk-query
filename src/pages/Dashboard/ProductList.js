@@ -1,16 +1,18 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { toast } from "react-hot-toast";
-import { useDispatch, useSelector } from "react-redux";
+import { useGetProductsQuery, useRemoveProductMutation } from "../../features/api/apiSlice";
 
 const ProductList = () => {
-  const [products, setProducts] = useState({});
-  const dispatch = useDispatch();
+  const [removeProduct] = useRemoveProductMutation();
+  const { data, isLoading, isSuccess, isError, error } = useGetProductsQuery();
+  const products = data?.data;
+  if (isLoading) {
+    return <p>Loading...</p>;
+  }
 
-  useEffect(() => {
-    fetch("https://moon-tech-server.vercel.app/products")
-      .then((res) => res.json())
-      .then((data) => setProducts(data.data));
-  }, []);
+  if (isError) {
+    return <p>Something went wrong</p>;
+  }
   return (
     <div class="flex flex-col justify-center items-center h-full w-full ">
       <div class="w-full max-w-7xl mx-auto rounded-lg  bg-white shadow-lg border border-gray-200">
@@ -69,7 +71,7 @@ const ProductList = () => {
                   </td>
                   <td class="p-2">
                     <div class="flex justify-center">
-                      <button onClick={() => dispatch()}>
+                      <button onClick={() => removeProduct(_id)}>
                         <svg
                           class="w-8 h-8 hover:text-blue-600 rounded-full hover:bg-gray-100 p-1"
                           fill="none"
